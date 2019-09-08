@@ -1,8 +1,6 @@
 <div>
   <canvas id="myCanvas" width="500" height="500"></canvas>
-  <!--<ng-container *ngFor="let node of nodes; let i = index">-->
   <ng-container *ngFor="let node of locations; let i = index">  
-     <!--<app-location-node [parentCanvas]= 'canvas' [id]='i' (sendDataToParent)="someFunction($event)" ></app-location-node>-->
      <app-location-node [parentCanvas]= 'canvas' [id]='i' [location]='node' (sendDataToParent)="someFunction($event)" ></app-location-node>
   </ng-container>
 </div>
