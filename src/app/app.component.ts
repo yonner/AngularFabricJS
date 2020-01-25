@@ -4,6 +4,7 @@ import { LocationModel } from './Location-Model';
 import { LocationPosition } from './locationPosition-Model';
 import { throwError, NEVER } from 'rxjs';
 import { PathModel } from './path-Model';
+import { PathmanagerService } from './pathmanager.service';
 //import { PathLocationStrategy } from '@angular/common';
 
 @Component({
@@ -14,68 +15,42 @@ import { PathModel } from './path-Model';
 export class AppComponent implements OnInit {
   
   title = 'angular-fabric';
-  canvas:any;
 
-  nodes:number[];
+ // nodes:number[];
 
-  locations : LocationModel[] = [];
+//  canvasWidth: number;
 
-  canvasWidth: number;
+  constructor(private pathManager : PathmanagerService) { }
 
-  nextId: number;
 
   ngOnInit() {
 
-    this.nextId = 1;
+    this.pathManager.nextId = 1;
 
     //this.nodes = [1,2,3];
-    this.nodes = [1];
+  //  this.nodes = [1];
 
-    var lm : LocationModel = { location: ( new LocationPosition(), { positionX: 30, positionY:30}), paths : [], fromLocation: null, id: '1'};
+/*    this.canvasWidth = 500;
 
-    this.locations.push(lm);
+    this.pathManager.canvas = new fabric.Canvas('myCanvas');
 
-    this.canvasWidth = 500;
+    this.pathManager.canvas.hoverCursor = 'pointer';
+    */
 
-    this.canvas = new fabric.Canvas('myCanvas');
+   this.pathManager.canvas = new fabric.Canvas('myCanvas');
 
-    this.canvas.hoverCursor = 'pointer';
-  }
+   this.pathManager.canvas.hoverCursor = 'pointer';
 
-  someFunction(data){
-
-    var lm : LocationModel = { location: ( new LocationPosition(), { positionX: 30, positionY:80}), paths : [], fromLocation: null, id: "1"};
-
-    this.locations[0]= lm;
-
-    this.canvas.clear();
+   this.pathManager.canvas.on('mouse:over', (e) => {
+  });
 
 
-    // resize the canvas
-    this.canvas.setWidth( (this.locations.length + 1 )* 230);
-    this.canvas.setHeight( 500 );
-    this.canvas.calcOffset();
+  this.pathManager.canvas.on('mouse:move', (e) => {
 
-    this.nextId++;
+    this.pathManager.updateCurrentMouse(e);
+    
+  });
 
-    var lm : LocationModel = { location: ( new LocationPosition(), { positionX: 30 + (data.location.positionX + 200), positionY:30}), paths: [], fromLocation: data, id: this.nextId + ''};
-
-    if (data.paths.length == 0){
-      var pm :  PathModel = { toLocation: lm, fromLocation : data , hazard: 'something', dir: 0};
-      data.paths.push(pm);
-    } else if (data.paths.length == 1){
-      var pm :  PathModel = { toLocation: lm, fromLocation : data , hazard: 'something', dir: 1};
-
-      data.paths.push(pm);
-
-      //adjust child locations
-      //lm.location.positionY -=50;
-      this.adjustChildren(lm.fromLocation);
-    }
-  
-    this.locations.push(lm);
-
-    console.log(data);
   }
 
   adjustChildren(location: LocationModel) {

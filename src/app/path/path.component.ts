@@ -13,20 +13,27 @@ export class PathComponent implements OnInit {
 
   @Input() path : PathModel;
 
+  line : fabric.Line;
+
   X : number;
 
   constructor() { }
+
+  ngOnChanges()
+  {
+    console.log("change");
+  }
 
   ngOnInit() {
 
     this.X =(( (this.path.toLocation.location.positionX + 30)- (this.path.fromLocation.location.positionX + 30)) / 2 ) + this.path.fromLocation.location.positionX;
     var text = new fabric.IText(this.path.hazard, {
       left: this.X,
-      top: 30,   
+      top: this.path.fromLocation.location.positionY,   
       fontSize: 20
     });
 
-    var line = new fabric.Line([this.path.fromLocation.location.positionX + 30, this.path.fromLocation.location.positionY+ 30, this.path.toLocation.location.positionX+ 30, this.path.toLocation.location.positionY+ 30], {
+    this.line = new fabric.Line([this.path.fromLocation.location.positionX + 30, this.path.fromLocation.location.positionY+ 30, this.path.toLocation.location.positionX+ 30, this.path.toLocation.location.positionY+ 30], {
       fill: 'black',
       stroke: 'black',
       strokeWidth: 5,
@@ -35,7 +42,7 @@ export class PathComponent implements OnInit {
       opacity: 0.3
     });
 
-    this.parentCanvas.add(line);
+    this.parentCanvas.add(this.line);
     
     this.parentCanvas.add(text);
   }
